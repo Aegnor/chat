@@ -52,7 +52,8 @@ export default {
                 password
             }
             // @TODO: make it with Vuex, also need to guard routes
-            await axios.post('api/auth', formData).then(({data}) => {
+            await axios.post('api/v1/auth', formData).then(({data}) => {
+                console.log(data)
                 if (Object.prototype.hasOwnProperty.call(data, 'token')) {
                     this.$router.push('/')
                 } else {

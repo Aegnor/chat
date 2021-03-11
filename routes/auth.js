@@ -44,11 +44,10 @@ router.post(
                     })
                 }
             } else {
-                const salt = bcrypt.genSaltSync(10)
                 const usersCollection = await User.find()
                 const newUser = new User({
                     login,
-                    password: bcrypt.hashSync(password, salt)
+                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
                 })
 
                 await newUser.save()

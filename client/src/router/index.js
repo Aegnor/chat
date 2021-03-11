@@ -6,6 +6,11 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
+    },
+    {
+        path: '/auth',
+        name: 'Authentication',
+        component: () => import('../components/Auth.vue')
     }
 ]
 

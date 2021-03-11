@@ -19,6 +19,8 @@ app.use(require('cors')())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+app.use('/api/v1/auth', require('./routes/auth'))
+
 io.on('connection', (socket) => {
     console.log('a user connected')
 })

@@ -25,8 +25,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    // @TODO: vuex - get value with getters
-    if (to.name !== 'Authentication' && to.name !== 'Page Not Found' && $store.state.user === null) next({name: 'Authentication'})
+    if (to.name !== 'Authentication' && to.name !== 'Page Not Found' && $store.getters.user === null) next({name: 'Authentication'})
     else next()
 })
 

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import {mapActions} from 'vuex'
 
 export default {
     data() {
@@ -45,20 +45,11 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['authentication']),
         async submit() {
-            const {login, password} = this
-            const formData = {
-                login,
-                password
-            }
-            // @TODO: make it with Vuex, also need to guard routes
-            await axios.post('api/v1/auth', formData).then(({data}) => {
-                console.log(data)
-                if (Object.prototype.hasOwnProperty.call(data, 'token')) {
-                    this.$router.push('/')
-                } else {
-                    this.$router.push('/chat')
-                }
+            await this.authentication({
+                login: this.login,
+                password: this.password
             })
         }
     }

@@ -6,18 +6,20 @@ const {body, validationResult} = require('express-validator')
 const User = require('../models/User')
 const env_config = require('../config/index')
 
-//@TODO: Validate special chars
 router.post(
     '/',
-    body('login').isLength({ min: 3 }).withMessage('Username must be minimum 3 characters'),
+    body('login')
+        .isLength({ min: 3 })
+        .withMessage('Username must be minimum 3 characters')
+        .custom(value => {
+            return !value.match(/[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/)
+        })
+        .withMessage('Username must not contain special chars like: `!@#$%^&*()_+-=[]{};\':"|,.<>/?~]'),
     async (req, res) => {
         try {
-            // @TODO: Refactor messages, maybe we need to send message in express-validator middleware
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                res.status(400).json({
-                    error: 'Username must be minimum 3 characters'
-                })
+                return res.status(400).json(errors)
             }
 
             const { login, password } = req.body
@@ -45,19 +47,23 @@ router.post(
                 }
             } else {
                 const usersCollection = await User.find()
-                const newUser = new User({
-                    login,
-                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-                })
 
-                await newUser.save()
+                if (!usersCollection.length) {
+                    const admin = new User({
+                        login,
+                        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+                        isAdmin: true
+                    })
 
-                if (usersCollection.length === 1) {
-                    const admin = await User.findOne({login: usersCollection[0].login})
-                    admin.isAdmin = true
                     await admin.save()
                     res.status(201).json(admin)
                 } else {
+                    const newUser = new User({
+                        login,
+                        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+                    })
+
+                    await newUser.save()
                     res.status(201).json(newUser)
                 }
             }

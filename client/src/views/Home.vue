@@ -5,6 +5,9 @@
 
 <script>
 export default {
-    name: 'Home'
+    name: 'Home',
+    mounted() {
+        console.log(this.$store.getters.user)
+    }
 }
 </script>

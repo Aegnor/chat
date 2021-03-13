@@ -13,10 +13,13 @@ export default {
         }
     },
     actions: {
-        // @TODO: handle errors
         async authentication({commit}, formData) {
-            const user = await axios.post('api/v1/auth', formData)
-            commit('setUser', user.data)
+            try {
+                const user = await axios.post('api/v1/auth', formData)
+                commit('setUser', user.data)
+            } catch (e) {
+                console.log(e.response)
+            }
         }
     }
 }

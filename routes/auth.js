@@ -22,8 +22,8 @@ router.post(
                 return res.status(400).json(errors)
             }
 
-            const { login, password } = req.body
-            const user = await User.findOne({ login })
+            const {login, password} = req.body
+            const user = await User.findOne({login})
 
             if (user) {
                 const isPasswordsEqual = bcrypt.compareSync(password, user.password)
@@ -37,9 +37,7 @@ router.post(
                         }
                     )
 
-                    res.status(200).send({
-                        token
-                    });
+                    res.status(200).send({token})
                 } else {
                     res.status(401).json({
                         error: 'Passwords are not the same, try again please'
@@ -48,24 +46,26 @@ router.post(
             } else {
                 const usersCollection = await User.find()
 
-                if (!usersCollection.length) {
-                    const admin = new User({
-                        login,
-                        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-                        isAdmin: true
-                    })
+                const newUser = new User({
+                    login,
+                    password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+                    isAdmin: !usersCollection.length
+                })
 
-                    await admin.save()
-                    res.status(201).json(admin)
-                } else {
-                    const newUser = new User({
-                        login,
-                        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-                    })
+                await newUser.save()
 
-                    await newUser.save()
-                    res.status(201).json(newUser)
-                }
+                const token = jwt.sign(
+                    newUser.toObject(),
+                    env_config.JWT_SECRET,
+                    {
+                        expiresIn: 60 * 60 * 2
+                    }
+                )
+
+                res.status(201).json({
+                    token,
+                    success: !usersCollection.length ? 'You are now admin of the chat' : 'You successfully created account'
+                })
             }
         } catch (e) {
             console.log(e)

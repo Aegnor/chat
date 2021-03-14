@@ -7,7 +7,7 @@ const env_config = require('./config/index')
 const http = require('http').createServer(app)
 const io = require('socket.io')(http, {
     cors: {
-        origin: 'http://localhost:8080'
+        origin: env_config.FRONT_URI
     }
 })
 

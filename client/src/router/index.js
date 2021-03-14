@@ -4,8 +4,8 @@ import $store from '../store/index'
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: () => import('../views/Home.vue')
+        name: 'Chat',
+        component: () => import('../views/Chat.vue')
     },
     {
         path: '/:pathMatch(.*)*',

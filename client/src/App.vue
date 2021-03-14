@@ -1,5 +1,5 @@
 <template>
-    <router-link to="/">Go to Home</router-link>
+    <router-link to="/">Go to Chat</router-link>
     <br>
     <router-link to="/auth">Auth</router-link>
     <router-view/>

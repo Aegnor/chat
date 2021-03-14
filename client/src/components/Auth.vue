@@ -1,6 +1,6 @@
 <template>
     <section class="section auth container-small" v-if="user">
-        <p>You are already log in</p>
+        <p class="text-center">You are already log in</p>
         <button @click="handleLogout" type="button" class="form-submit btn">Logout</button>
     </section>
     <section class="section auth container-small" v-else>
@@ -71,7 +71,6 @@ export default {
 <style lang="scss">
 .auth {
     min-height: 100vh;
-    max-width: 550px;
     display: flex;
     flex-direction: column;
     justify-content: center;

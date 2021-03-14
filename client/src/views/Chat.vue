@@ -1,11 +1,11 @@
 <template>
-    <div class="home">
+    <div class="chat">
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Home',
+    name: 'Chat',
     mounted() {
         console.log(this.$store.getters.user)
     }

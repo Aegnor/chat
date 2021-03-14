@@ -1,5 +1,7 @@
 <template>
     <router-link to="/">Go to Home</router-link>
+    <br>
+    <router-link to="/auth">Auth</router-link>
     <router-view/>
 </template>
 

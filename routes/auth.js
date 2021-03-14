@@ -49,7 +49,7 @@ router.post(
                 const newUser = new User({
                     login,
                     password: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-                    isAdmin: !usersCollection.length
+                    role: !usersCollection.length ? 'admin' : 'user'
                 })
 
                 await newUser.save()

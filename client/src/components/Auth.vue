@@ -15,6 +15,7 @@
                     class="form-control"
                     placeholder="It can be username or email address"
                     minlength="3"
+                    title="It can be username or email address"
                     required
                     v-model="login"
                 />

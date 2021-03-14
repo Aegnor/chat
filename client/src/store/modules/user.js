@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default {
     state: {
-        user: null
+        user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
     },
     getters: {
         user: state => state.user
@@ -12,6 +12,7 @@ export default {
             state.user = user
         },
         logout(state) {
+            localStorage.removeItem('user')
             state.user = null
         }
     },
@@ -20,6 +21,7 @@ export default {
             try {
                 const user = await axios.post('api/v1/auth', formData)
                 commit('setUser', user.data)
+                localStorage.setItem('user', JSON.stringify(user.data))
             } catch (e) {
                 console.log(e.response)
             }

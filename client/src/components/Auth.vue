@@ -1,5 +1,9 @@
 <template>
-    <section class="section login container-small">
+    <section class="section auth container-small" v-if="user">
+        <p>You are already log in</p>
+        <button @click="handleLogout" type="button" class="form-submit btn">Logout</button>
+    </section>
+    <section class="section auth container-small" v-else>
         <h1>Authentication</h1>
         <form class="form" @submit.prevent="submit">
             <div class="form-field">
@@ -23,7 +27,7 @@
                     id="password"
                     class="form-control"
                     placeholder="Enter Password"
-                    pattern=".{5,15}"
+                    minlength="5"
                     title="Password must be between 5 and 15 characters"
                     required
                     v-model="password"
@@ -41,23 +45,30 @@ export default {
     data() {
         return {
             login: '',
-            password: ''
+            password: '',
+            user: this.$store.getters.user
         }
     },
     methods: {
-        ...mapActions(['authentication']),
+        ...mapActions(['authentication', 'logout']),
         async submit() {
             await this.authentication({
                 login: this.login,
                 password: this.password
             })
+
+            this.user = this.$store.getters.user
+        },
+        handleLogout() {
+            this.logout()
+            this.user = this.$store.getters.user
         }
     }
 }
 </script>
 
 <style lang="scss">
-.login {
+.auth {
     min-height: 100vh;
     max-width: 550px;
     display: flex;

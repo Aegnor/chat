@@ -10,6 +10,9 @@ export default {
     mutations: {
         setUser(state, user) {
             state.user = user
+        },
+        logout(state) {
+            state.user = null
         }
     },
     actions: {
@@ -20,6 +23,9 @@ export default {
             } catch (e) {
                 console.log(e.response)
             }
+        },
+        logout({commit}) {
+            commit('logout')
         }
     }
 }

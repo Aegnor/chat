@@ -64,7 +64,7 @@ router.post(
 
                 res.status(201).json({
                     token,
-                    success: !usersCollection.length ? 'You are now admin of the chat' : 'You successfully created account'
+                    msg: !usersCollection.length ? 'You are now admin of the chat' : 'You successfully created account'
                 })
             }
         } catch (e) {

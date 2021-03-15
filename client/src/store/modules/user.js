@@ -17,13 +17,25 @@ export default {
         }
     },
     actions: {
-        async authentication({commit}, formData) {
+        async authentication({commit, dispatch}, formData) {
             try {
                 const user = await axios.post('api/v1/auth', formData)
-                commit('setUser', user.data)
-                localStorage.setItem('user', JSON.stringify(user.data))
+                const {token, msg} = user.data
+                commit('setUser', token)
+                // @TODO: refactor local storage
+                localStorage.setItem('user', JSON.stringify(token))
+                if (msg) {
+                    dispatch('addNotification', {
+                        data: msg,
+                        type: 'success'
+                    })
+                }
             } catch (e) {
-                console.log(e.response)
+                const errors = e.response.data.errors ?? e.response.data.error
+                dispatch('addNotification', {
+                    data: errors,
+                    type: 'error'
+                })
             }
         },
         logout({commit}) {

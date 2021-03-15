@@ -1,22 +1,29 @@
 <template>
-    <section class="notification container-small">
-        <p>hello i am Notification</p>
+    <section class="notification-container container-small" v-if="notifications.length">
+        <p class="message" v-for="note in notifications" :key="note.id">
+            {{note.msg}}<br>
+            {{note.id}}<br>
+            {{note.type}}<br>
+        </p>
     </section>
 </template>
 
 <script>
 export default {
-    name: 'Notification'
+    name: 'Notification',
+    data() {
+        return {
+            notifications: this.$store.getters.notifications
+        }
+    }
 }
 </script>
 
 <style lang="scss">
-.notification {
+.notification-container {
     position: fixed;
     top: 40px;
     left: 50%;
     transform: translateX(-50%);
-    text-align: center;
-    background-color: #57a254;
 }
 </style>

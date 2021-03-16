@@ -1,62 +1,54 @@
 <template>
-    <div class="container">
-        <ul class="messages-list">
-            <li class="messages-item">
-                <p class="user">User:</p>
-                <p class="user-message">It’s a new way to communicate — faster than email and more focused than chat. It’s a new way to communicate — faster than email and more focused than chat.</p>
-            </li>
-            <li class="messages-item">
-                <p class="user">It’s a new way 2:</p>
-                <p class="user-message user-message-owner">It’s a new way to communicate—faster than email and more focused than chat. It’s a new way to communicate — faster than email and more focused than chat.</p>
-            </li>
-        </ul>
-        <form action="#" class="message-form">
-            <label for="message" class="visually-hidden">Type here message</label>
-            <input id="message" type="text" class="message-input">
-            <button class="btn message-submit">Send</button>
-        </form>
-    </div>
+    <article class="chat">
+        <ChatSidebar/>
+        <div class="container">
+            <ChatMessages/>
+            <form action="#" class="message-form d-flex" @submit.prevent="submit">
+                <label for="message" class="visually-hidden">Type here message</label>
+                <input
+                    id="message"
+                    name="message"
+                    type="text"
+                    class="message-input"
+                    v-model="message"
+                >
+                <button type="submit" class="btn message-submit">Send</button>
+            </form>
+        </div>
+    </article>
 </template>
 
 <script>
+import ChatSidebar from '@/components/chat/ChatSidebar'
+import ChatMessages from '@/components/chat/ChatMessages'
+
 export default {
     name: 'Chat',
-    mounted() {
-        console.log(this.$store.getters.user)
+    components: {
+        ChatSidebar,
+        ChatMessages
+    },
+    data() {
+        return {
+            message: ''
+        }
+    },
+    methods: {
+        submit() {
+            console.log('submit')
+        }
     }
 }
 </script>
 
 <style lang="scss">
-.user {
-    margin-right: 5px;
-    min-width: 90px;
-
-    &-message {
-        padding: 5px;
-        background-color: #3c9adf;
-
-        &-owner {
-            background-color: #fff;
-            color: #000;
-        }
-    }
-}
-
-.messages {
-    &-item {
-        display: flex;
-        margin-bottom: 20px;
-    }
-}
-
 .message {
     &-form {
-        display: flex;
         justify-content: space-between;
         position: fixed;
         bottom: 0;
-        width: 830px;
+        width: calc(100% - 20px);
+        max-width: 830px;
     }
 
     &-input {

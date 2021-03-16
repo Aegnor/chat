@@ -13,14 +13,14 @@
             <button
                 type="button"
                 aria-label="Remove notification"
-                @click="handleRemoveNotification(note.id)"
+                @click="removeNotification(note.id)"
             >close</button>
         </div>
     </section>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import {mapMutations} from 'vuex'
 
 export default {
     name: 'Notification',
@@ -30,9 +30,9 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['removeNotification']),
-        handleRemoveNotification(id) {
-            this.removeNotification(id)
+        ...mapMutations(['deleteNotification']),
+        removeNotification(id) {
+            this.deleteNotification(id)
         }
     }
 }

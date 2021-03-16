@@ -33,9 +33,6 @@ export default {
     actions: {
         addNotification({commit}, notification) {
             commit('pushNotification', notification)
-        },
-        removeNotification({commit}, id) {
-            commit('deleteNotification', id)
         }
     }
 }

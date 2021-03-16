@@ -53,12 +53,18 @@ export default {
     methods: {
         ...mapActions(['authentication', 'logout']),
         async submit() {
-            await this.authentication({
-                login: this.login,
-                password: this.password
-            })
+            try {
+                await this.authentication({
+                    login: this.login,
+                    password: this.password
+                })
 
-            this.user = this.$store.getters.user
+                this.user = this.$store.getters.user
+
+                await this.$router.push('/')
+            } catch (e) {
+                console.log(e)
+            }
         },
         handleLogout() {
             this.logout()

@@ -24,11 +24,18 @@ export default {
                     state.notifications.push(note)
                 })
             }
+        },
+        deleteNotification(state, id) {
+            const notificationIndex = state.notifications.findIndex(note => note.id === id)
+            state.notifications.splice(notificationIndex, 1)
         }
     },
     actions: {
-        addNotification({commit}, notification, type) {
-            commit('pushNotification', notification, type)
+        addNotification({commit}, notification) {
+            commit('pushNotification', notification)
+        },
+        removeNotification({commit}, id) {
+            commit('deleteNotification', id)
         }
     }
 }

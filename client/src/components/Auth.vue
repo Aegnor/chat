@@ -6,7 +6,7 @@
     <section class="section auth container-small" v-else>
         <h1>Authentication</h1>
         <form class="form" @submit.prevent="submit">
-            <div class="form-field">
+            <fieldset class="form-field">
                 <label for="login" class="form-label">Login</label>
                 <input
                     type="text"
@@ -19,8 +19,8 @@
                     required
                     v-model="login"
                 />
-            </div>
-            <div class="form-field">
+            </fieldset>
+            <fieldset class="form-field">
                 <label for="password" class="form-label">Password</label>
                 <input
                     type="password"
@@ -33,8 +33,8 @@
                     required
                     v-model="password"
                 />
-            </div>
-            <button type="submit" class="form-submit btn">Login</button>
+            </fieldset>
+            <button type="submit" class="form-submit btn" :disabled="isFormDisabled">Login</button>
         </form>
     </section>
 </template>
@@ -47,28 +47,31 @@ export default {
         return {
             login: '',
             password: '',
-            user: this.$store.getters.user
+            user: this.$store.getters.user,
+            isFormDisabled: false
         }
     },
     methods: {
         ...mapActions(['authentication', 'logout']),
         async submit() {
             try {
-                await this.authentication({
+                this.isFormDisabled = true
+                const authAction = await this.authentication({
                     login: this.login,
                     password: this.password
                 })
 
-                this.user = this.$store.getters.user
-
-                await this.$router.push('/')
+                if (authAction) {
+                    await this.$router.push('/')
+                } else {
+                    this.isFormDisabled = false
+                }
             } catch (e) {
                 console.log(e)
             }
         },
         handleLogout() {
             this.logout()
-            this.user = this.$store.getters.user
         }
     }
 }

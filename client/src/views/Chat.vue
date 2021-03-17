@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import {io} from 'socket.io-client'
 import ChatSidebar from '@/components/chat/ChatSidebar'
 import ChatMessages from '@/components/chat/ChatMessages'
 
@@ -27,6 +28,9 @@ export default {
     components: {
         ChatSidebar,
         ChatMessages
+    },
+    mounted() {
+        io('http://localhost:3030')
     },
     data() {
         return {

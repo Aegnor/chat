@@ -24,7 +24,7 @@ export default {
     name: 'ChatMessages',
     data() {
         return {
-            messages: []
+            messages: this.$store.getters.messages
         }
     }
 }

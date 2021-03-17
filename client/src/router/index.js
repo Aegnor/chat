@@ -25,8 +25,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.name !== 'Authentication' && to.name !== 'Page Not Found' && $store.getters.user === null) next({name: 'Authentication'})
-    else next()
+    if (to.name !== 'Authentication' && to.name !== 'Page Not Found' && $store.getters.user === null) {
+        $store.dispatch('addNotification', {
+            data: 'You need to authenticate first',
+            type: 'warning'
+        })
+        next({name: 'Authentication'})
+    } else {
+        next()
+    }
 })
 
 export default router

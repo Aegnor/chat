@@ -21,18 +21,23 @@ export default {
                 const user = await axios.post('api/v1/auth', formData)
                 const {token, msg} = user.data
                 commit('setUser', token)
+
                 if (msg) {
                     dispatch('addNotification', {
                         data: msg,
                         type: 'success'
                     })
                 }
+                // need to detect if all is OK
+                return true
             } catch (e) {
                 const errors = e.response.data.errors ?? e.response.data.error
                 dispatch('addNotification', {
                     data: errors,
                     type: 'error'
                 })
+                // need to detect if error accured
+                return false
             }
         },
         logout({commit}) {

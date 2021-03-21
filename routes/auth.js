@@ -1,10 +1,9 @@
 const router = require('express').Router()
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const {body, validationResult} = require('express-validator')
 
 const User = require('../models/User')
-const env_config = require('../config/index')
+const {signJwtToken} = require('../helpers/jwt')
 
 router.post(
     '/',
@@ -29,15 +28,11 @@ router.post(
                 const isPasswordsEqual = bcrypt.compareSync(password, user.password)
 
                 if (isPasswordsEqual) {
-                    const token = jwt.sign(
-                        user.toObject(),
-                        env_config.JWT_SECRET,
-                        {
-                            expiresIn: 60 * 60 * 2
-                        }
-                    )
-
-                    res.status(200).send({token})
+                    res.status(200).send(signJwtToken({
+                        role: user.role,
+                        login: user.login,
+                        _id: user._id
+                    }))
                 } else {
                     res.status(401).json({
                         error: 'Passwords are not the same, try again please'
@@ -54,13 +49,11 @@ router.post(
 
                 await newUser.save()
 
-                const token = jwt.sign(
-                    newUser.toObject(),
-                    env_config.JWT_SECRET,
-                    {
-                        expiresIn: 60 * 60 * 2
-                    }
-                )
+                const token = signJwtToken({
+                    role: newUser.role,
+                    login: newUser.login,
+                    _id: newUser._id
+                })
 
                 res.status(201).json({
                     token,

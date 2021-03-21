@@ -7,7 +7,7 @@ const env_config = require('./config/index')
 const http = require('http').createServer(app)
 const io = require('socket.io')(http, {
     cors: {
-        origin: env_config.FRONT_URI
+        origin: env_config.FRONT_URI,
     }
 })
 
@@ -22,7 +22,10 @@ const csrfProtection = require('csurf')({
 })
 
 app.use(require('helmet')())
-app.use(require('cors')())
+app.use(require('cors')({
+    origin: env_config.FRONT_URI,
+    credentials: true
+}))
 app.use(require('cookie-parser')())
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -31,12 +34,12 @@ app.use(bodyParser.json())
 app.use('/api/v1/auth', csrfProtection, require('./routes/auth'))
 
 // Create csrfToken
-app.get('/form', csrfProtection, (req, res) => {
+app.get('/api/v1/form', csrfProtection, (req, res) => {
     res.send({ csrfToken: req.csrfToken()})
 })
 
-io.on('connection', (socket) => {
-    console.log('a user connected')
+app.get('*', (req, res) => {
+    res.status(404).send({error: '404 Page Not Found'})
 });
 
 (async () => {
@@ -52,3 +55,9 @@ io.on('connection', (socket) => {
         console.log(e)
     }
 })()
+
+io.on('connection', (socket) => {
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg)
+    })
+})

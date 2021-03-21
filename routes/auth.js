@@ -28,11 +28,13 @@ router.post(
                 const isPasswordsEqual = bcrypt.compareSync(password, user.password)
 
                 if (isPasswordsEqual) {
-                    res.status(200).send(signJwtToken({
-                        role: user.role,
-                        login: user.login,
-                        _id: user._id
-                    }))
+                    res.status(200).send({
+                        token: signJwtToken({
+                            role: user.role,
+                            login: user.login,
+                            _id: user._id
+                        })
+                    })
                 } else {
                     res.status(401).json({
                         error: 'Passwords are not the same, try again please'
@@ -49,14 +51,12 @@ router.post(
 
                 await newUser.save()
 
-                const token = signJwtToken({
-                    role: newUser.role,
-                    login: newUser.login,
-                    _id: newUser._id
-                })
-
                 res.status(201).json({
-                    token,
+                    token: signJwtToken({
+                        role: newUser.role,
+                        login: newUser.login,
+                        _id: newUser._id
+                    }),
                     msg: !usersCollection.length ? 'You are now admin of the chat' : 'You successfully created account'
                 })
             }

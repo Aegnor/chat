@@ -32,6 +32,10 @@ export default {
     },
     mounted() {
         this.connectSocket(io('http://localhost:3030'))
+
+        this.socket().on('chat message', msg => {
+            this.addMessage(msg)
+        })
     },
     data() {
         return {
@@ -42,12 +46,8 @@ export default {
         ...mapMutations(['connectSocket', 'addMessage']),
         ...mapGetters(['socket']),
         async submit() {
-            // await this.socket().emit('chat message', this.message)
+            await this.socket().emit('chat message', this.message)
 
-            // this.socket().on('chat message', msg => {
-            //     this.addMessage(msg)
-            // })
-            this.addMessage(this.message)
             this.message = ''
         }
     }

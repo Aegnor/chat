@@ -18,9 +18,9 @@ export default {
     actions: {
         async authentication({commit, dispatch}, formData) {
             try {
-                const user = await axios.post('api/v1/auth', formData)
-                const {token, msg} = user.data
-                commit('setUser', token)
+                const user = await axios.create({withCredentials: true}).post('api/v1/auth', formData)
+                const {msg} = user.data
+                commit('setUser', formData)
 
                 if (msg) {
                     dispatch('addNotification', {
@@ -28,6 +28,7 @@ export default {
                         type: 'success'
                     })
                 }
+
                 // need to detect if all is OK
                 return true
             } catch (e) {
@@ -36,6 +37,7 @@ export default {
                     data: errors,
                     type: 'error'
                 })
+
                 // need to detect if error accured
                 return false
             }

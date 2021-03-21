@@ -20,6 +20,7 @@
 
 <script>
 import {io} from 'socket.io-client'
+import {mapMutations, mapGetters} from 'vuex'
 import ChatSidebar from '@/components/chat/ChatSidebar'
 import ChatMessages from '@/components/chat/ChatMessages'
 
@@ -30,7 +31,7 @@ export default {
         ChatMessages
     },
     mounted() {
-        io('http://localhost:3030')
+        this.connectSocket(io('http://localhost:3030'))
     },
     data() {
         return {
@@ -38,8 +39,16 @@ export default {
         }
     },
     methods: {
-        submit() {
-            console.log('submit')
+        ...mapMutations(['connectSocket', 'addMessage']),
+        ...mapGetters(['socket']),
+        async submit() {
+            // await this.socket().emit('chat message', this.message)
+
+            // this.socket().on('chat message', msg => {
+            //     this.addMessage(msg)
+            // })
+            this.addMessage(this.message)
+            this.message = ''
         }
     }
 }

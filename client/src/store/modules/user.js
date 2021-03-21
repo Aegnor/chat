@@ -1,4 +1,5 @@
 import axios from 'axios'
+import jwtDecode from 'jwt-decode'
 
 export default {
     state: {
@@ -19,8 +20,8 @@ export default {
         async authentication({commit, dispatch}, formData) {
             try {
                 const user = await axios.create({withCredentials: true}).post('api/v1/auth', formData)
-                const {msg} = user.data
-                commit('setUser', formData)
+                const {token, msg} = user.data
+                commit('setUser', jwtDecode(token))
 
                 if (msg) {
                     dispatch('addNotification', {

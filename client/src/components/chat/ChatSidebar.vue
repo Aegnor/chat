@@ -2,7 +2,7 @@
     <aside class="chat-sidebar" v-if="users.length">
         <h2 class="visually-hidden">List of online users</h2>
         <ul class="users-list">
-            <li v-for="user in users" :key="user.name"><span>{{user.name}}</span> are online</li>
+            <li v-for="user in users" :key="user._id"><span>{{user.login}}</span> are online</li>
         </ul>
     </aside>
 </template>
@@ -12,7 +12,7 @@ export default {
     name: 'ChatSidebar',
     data() {
         return {
-            users: []
+            users: this.$store.getters.users
         }
     }
 }

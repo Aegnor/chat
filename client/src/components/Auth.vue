@@ -12,6 +12,7 @@
                     type="text"
                     name="login"
                     id="login"
+                    autofocus="autofocus"
                     class="form-control"
                     placeholder="It can be username or email address"
                     minlength="3"

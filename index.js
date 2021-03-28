@@ -57,7 +57,20 @@ app.get('*', (req, res) => {
 })()
 
 io.on('connection', (socket) => {
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg)
+    let user = null
+
+    socket.on('chat message', (msgObj) => {
+        io.emit('chat message', msgObj)
+    })
+
+    socket.on('user joined', (userObj) => {
+        user = userObj
+        io.emit('user joined', userObj)
+    })
+
+    socket.on('disconnect', () => {
+        if (user) {
+            io.emit('user left', user._id)
+        }
     })
 })

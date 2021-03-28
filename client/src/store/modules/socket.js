@@ -1,22 +1,31 @@
 export default {
     state: {
         socket: null,
-        messages: []
+        messages: [],
+        users: []
     },
     getters: {
         socket: state => state.socket,
-        messages: state => state.messages
+        messages: state => state.messages,
+        users: state => state.users
     },
     mutations: {
         connectSocket(state, payload) {
             state.socket = payload
         },
-        addMessage(state, message) {
-            console.log(state.messages)
+        addMessage(state, messageObject) {
             state.messages.push({
-                text: message,
-                id: Date.now().toString(36)
+                user: messageObject.user,
+                text: messageObject.message,
+                id: messageObject.messageId
             })
+        },
+        addUser(state, user) {
+            state.users.push(user)
+        },
+        removeUser(state, id) {
+            const idx = state.users.findIndex(user => user._id === id)
+            state.users.splice(idx, 1)
         }
     }
 }

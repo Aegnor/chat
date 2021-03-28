@@ -3,16 +3,18 @@
         <ChatSidebar/>
         <div class="container">
             <ChatMessages/>
-            <form action="#" class="message-form d-flex" @submit.prevent="submit">
-                <label for="message" class="visually-hidden">Type here message</label>
-                <input
-                    id="message"
-                    name="message"
-                    type="text"
-                    class="message-input"
-                    v-model="message"
-                >
-                <button type="submit" class="btn message-submit">Send</button>
+            <form action="#" class="message-form" @submit.prevent="submit">
+                <fieldset :disabled="isFromDisabled" class="d-flex">
+                    <label for="message" class="visually-hidden">Type here message</label>
+                    <input
+                        id="message"
+                        name="message"
+                        type="text"
+                        class="message-input"
+                        v-model="message"
+                    >
+                    <button type="submit" class="btn message-submit">Send</button>
+                </fieldset>
             </form>
         </div>
     </article>
@@ -33,22 +35,56 @@ export default {
     mounted() {
         this.connectSocket(io('http://localhost:3030'))
 
+        this.socket().emit('user joined', this.$store.getters.user)
+
+        this.socket().on('user joined', user => {
+            this.addUser(user)
+        })
+
+        this.socket().on('user left', userId => {
+            this.removeUser(userId)
+        })
+
         this.socket().on('chat message', msg => {
             this.addMessage(msg)
         })
     },
     data() {
         return {
-            message: ''
+            message: '',
+            isFromDisabled: false
         }
     },
     methods: {
-        ...mapMutations(['connectSocket', 'addMessage']),
+        ...mapMutations(['connectSocket', 'addMessage', 'addUser', 'removeUser']),
         ...mapGetters(['socket']),
         async submit() {
-            await this.socket().emit('chat message', this.message)
+            if (!this.message.trim()) {
+                return
+            }
+
+            if (this.message.length > 200) {
+                this.$store.dispatch('addNotification', {
+                    type: 'error',
+                    data: `Length must be less than 200 letters now - ${this.message.length}`
+                })
+
+                return
+            }
+
+            // @TODO: block sending message for 15sec on server
+            await this.socket().emit('chat message', {
+                user: this.$store.getters.user.login,
+                message: this.message,
+                messageId: this.$store.getters.user._id
+            })
 
             this.message = ''
+            this.isFromDisabled = true
+
+            setTimeout(() => {
+                this.isFromDisabled = false
+            }, 15000)
         }
     }
 }
@@ -58,6 +94,7 @@ export default {
 .message {
     &-form {
         justify-content: space-between;
+
         position: fixed;
         bottom: 0;
         width: calc(100% - 20px);
